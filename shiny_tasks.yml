@@ -1,0 +1,160 @@
+---
+- hosts: localhost 
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+ 
+  environment:
+    PATH: /opt/rh/devtoolset-8/root/usr/bin/:{{ ansible_env.PATH }}:/usr/local/bin/
+
+  tasks:
+  - name: Find out playbook's path
+    shell: pwd
+    register: playbook_path_output
+
+  - name: Create a directory if it does not exist
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: '0755'
+    loop:
+      - ./library/
+      - ./tmp/
+      - ./cran
+
+  - name: install Dev-Tools
+    shell: |
+        sudo yum groupinstall -y "Development Tools"
+
+  - name: Install a list of packages
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - devtoolset-8 
+      - readline-devel
+      - gcc
+      - gcc-c++
+      - libcurl-devel
+      - libxml2-devel
+      - xorg-x11-server-devel
+      - libX11-devel
+      - libXt-devel
+      - libxml2-devel
+      - openssl-devel
+      - texlive-*
+      - mysql-devel
+      - cairo-devel 
+      - cairomm-devel
+      - libjpeg-turbo-devel
+      - libXt-devel 
+      - libicu-devel 
+      - libicu
+      - postgresql-devel
+      - gsl-devel
+      - libiodbc-devel
+      - unixODBC-devel
+      - openldap-devel 
+      - bc
+      - net-tools
+      - boost-devel
+      - libgit2-devel
+      - v8-devel
+      - libsodium-devel
+      - udunits2-devel
+      - NLopt
+      - nlopt-devel
+      - geos
+      - geos-devel
+      - gdal
+      - gdal-devel
+      - gmp-devel
+      - fribidi-devel
+      - ImageMagick-c++-devel 
+      - harfbuzz-devel
+      - fribidi-devel
+      - poppler-cpp-devel
+      - unixODBC-devel
+      - pcre2
+      - java-1.8.0-openjdk-devel
+      - java-1.8.0-openjdk-headless
+    become: yes
+    become_method: sudo
+
+
+  - name: Download R Source  
+    get_url:
+      url: https://artifacts.ruv.de/artifactory/list/cran-remote-r-project-org/src/base/R-4/R-4.0.2.tar.gz 
+      dest: ./tmp/
+
+  - name: Download stringi from Artifact
+    get_url:
+      url: https://artifacts.ruv.de/artifactory/list/cran-local-lx/src/contribsrc/contrib/stringi_1.5.3.tar.gz
+      dest: ./tmp/
+
+  - name: Unarchive a R
+    unarchive:
+      src: ./tmp/R-4.0.2.tar.gz
+      dest: "{{ playbook_path_output.stdout }}/tmp/" 
+
+  - name: install R
+    shell: |
+        cd ./tmp/R-4.0.2
+        sudo ./configure --with-pcre1
+        sudo env "PATH=$PATH" make
+        sudo env "PATH=$PATH" make install 
+    
+  - name: Create RProfile
+    copy:
+      dest: "~/.Rprofile"
+      content: |
+        local({r <- getOption("repos")
+        r["CRAN"] <- "https://artifacts.ruv.de/artifactory/cran-remote-r-project-org/"
+        options(repos=r)})
+
+  - name: create RScript to install stringi
+    copy:
+      dest: "{{ playbook_path_output.stdout }}/tmp/ext.R"
+      content: |
+        install.packages(paste0(getwd(),"/stringi_1.5.3.tar.gz"),lib =  "../library", repos=NULL)
+
+  - name: run JAVA for R
+    ansible.builtin.command: sudo R CMD javareconf
+
+  - name: run extra R script
+    ansible.builtin.command: Rscript ext.R
+    args:
+      chdir: tmp/
+
+  - name: run the R script to install packages 
+    ansible.builtin.command: Rscript ./shiny_packages.R
+
+  - name: find all Packages
+    find:
+      paths: ./library/
+      depth: 2
+      file_type: directory
+    register: pack_name
+
+#  - name: debug
+#    debug:
+#      #msg: "{{ pack_name['files'] | map(attribute='path') | map('regex_replace','^.*/(.*)$','\\1')| list  }}"
+#      msg: "{{ item.path | basename  }}" #"{{ playbook_path_output.stdout }}/cran/{{ item }}"
+#    with_items: "{{ pack_name.files }}"
+                
+
+  - name: Compress Directory contents
+    become: yes
+    archive:
+      path: "{{ item.path }}"
+      dest: "{{ playbook_path_output.stdout }}/cran/{{ item.path | basename  }}.gz" #ybook_path_output.stdout }}/cran/" #"{{ cran.files }}.gz"
+      format: gz
+    with_items: "{{ pack_name.files }}"
+    
+  - name: delete multiple file
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /tmp
+    

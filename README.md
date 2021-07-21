@@ -18,7 +18,7 @@ Step 1: Check, if the necessary Package is available at https://artifacts.ruv.de
 **If the package is not available ask Mohammad Assadsolimani, Alexej Jaick or Marcel Ulrich to upload the package in artifactory**
 
 Step 2: You can download single packages direct from artifatory or use the artifact_download.sh - script to download all of them. 
-1. **artifact_download.sh**: a shell script to download the R packages on a shiny server and copy them into the correct folder. Every user on the shiny server should be able to apply this script.
+1. **artifact_download.sh**: a shell script to download the R packages on a shiny server and copy them into the correct folder. Every user on the shiny server should be able to apply this script. First ensure that the script is executeable or make it executeable (chmod +x artifact_download.sh), then run it by ./artifact_download.sh.
 
 Step 3: Destination to copy the R-Packages on the Linux Server is: "/apps/shiny/site-library"
 

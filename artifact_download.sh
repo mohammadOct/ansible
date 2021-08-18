@@ -11,4 +11,4 @@ done
 
 rm -rf tmp/contrib
 
-cp -rp  tmp/* site-library/
+cp -rp  tmp/* /apps/shiny/site-library/

@@ -36,3 +36,14 @@ Step 3: Destination to copy the R-Packages on the Linux Server is: "/apps/shiny/
 4. **artifact_upload.sh**: to upload the compiled R packages into Artifactory (https://artifacts.ruv.de/artifactory/webapp/#/artifacts/browse/tree/General/cran-local-lx/src/contrib). This is just possible, if the user is allowed to write in this repository.
 
 If you have any further questions, please contact Mohammad Assadsolimani, Alexej Jaick or Marcel Ulrich
+
+
+## Erläuterung in einfacher Sprache: Wenn CRAN Paket hinzugefügt oder geupdatet werden soll:
+1. Flexit Maschine bestellen https://vra.ruv.de/vcac/#csp.cs.ui.catalog.list (public key hinterlegen: Hier Format einfügen.)
+1. Auf Flexit Maschine einloggen über Putty: Name der Flexit Maschine und Port 22
+1. Auf Flexit Maschine `git clone https://github.ruv.de/xv60789/ansibleRShiny.git`
+1. In neuen Ordner gehen  `cd ansibleRShiny`.
+1. `shiny_packages.R` anpassen, indem Liste von Paketen gelöscht und durch gewünschte Pakete (auf CRAN) ersetzt wird.
+1. Ausführen von `ansible-playbook shiny_tasks.yml`
+1. Ausführen `scp -r library/* xv12345@lx00XXX:/apps/shiny/site-library/` wobei xv12345 die XV-Nummer ist und lx00XXX ist der Name der Linux-Maschine.
+1. Alternativ wenn libraries ersetzt werden soll: `scp -rp library/* xv12345@lx00XXX:/apps/shiny/site-library/` 

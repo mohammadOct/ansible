@@ -45,5 +45,6 @@ If you have any further questions, please contact Mohammad Assadsolimani, Alexej
 1. In neuen Ordner gehen  `cd ansibleRShiny`.
 1. `shiny_packages.R` anpassen, indem Liste von Paketen gelöscht und durch gewünschte Pakete (auf CRAN) ersetzt wird.
 1. Ausführen von `ansible-playbook shiny_tasks.yml`
-1. Ausführen `scp -r library/* xv12345@lx00XXX:/apps/shiny/site-library/` wobei xv12345 die XV-Nummer ist und lx00XXX ist der Name der Linux-Maschine.
+1. Vor den nächsten Befehlen in putty "forwarding" erlauben: Unter `data` xv-Nummer als Auto-Login-User eintragen und unter SSH > Auth > "Allow agent forwarding" anhaken.
+1. Ausführen `scp -r library/* xv12345@lx00XXX:/apps/shiny/site-library/` wobei xv12345 die XV-Nummer ist und lx00XXX ist der Name der Linux-Maschine. (Achtung hier auf momentanen Ordner, ggf. library nicht notwendig
 1. Alternativ wenn libraries ersetzt werden soll: `scp -rp library/* xv12345@lx00XXX:/apps/shiny/site-library/` 

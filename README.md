@@ -39,7 +39,8 @@ If you have any further questions, please contact Mohammad Assadsolimani, Alexej
 
 
 ## Erläuterung in einfacher Sprache: Wenn CRAN Paket hinzugefügt oder geupdatet werden soll:
-1. Flexit Maschine bestellen https://vra.ruv.de/vcac/#csp.cs.ui.catalog.list (public key hinterlegen: Hier Format einfügen.)
+1. Flexit Maschine bestellen https://vra.ruv.de/vcac/#csp.cs.ui.catalog.list
+1. Wichtig bei der Beantragung ist der public key der in einem speziellen Format vorliegen muss. Nur der reine Key (ab dem Buchstaben-Salat `AAAB...`) in einer Zeile ohne Kommentare lediglich VOR den Key kommt `ssh-rsa ` inklusive Leerzeichen und am Ende des Keys in der gleichen Zeile `== xv12345` mit der entsprechenden xv-Nummer und inklusive Leerzeichen. 
 1. Auf Flexit Maschine einloggen über Putty: Name der Flexit Maschine und Port 22
 1. Auf Flexit Maschine `git clone https://github.ruv.de/xv60789/ansibleRShiny.git`
 1. In neuen Ordner gehen  `cd ansibleRShiny`.

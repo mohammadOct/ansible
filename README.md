@@ -38,14 +38,14 @@ Step 3: Destination to copy the R-Packages on the Linux Server is: "/apps/shiny/
 If you have any further questions, please contact Mohammad Assadsolimani, Alexej Jaick or Marcel Ulrich
 
 
-## Erläuterung in einfacher Sprache: Wenn CRAN Paket hinzugefügt oder geupdatet werden soll:
+## Erläuterung in einfacher Sprache:<br>Wenn CRAN Paket hinzugefügt oder geupdatet werden soll:
 1. Flexit Maschine bestellen https://vra.ruv.de/vcac/#csp.cs.ui.catalog.list
-1. Wichtig bei der Beantragung ist der public key der in einem speziellen Format vorliegen muss. Nur der reine Key (ab dem Buchstaben-Salat `AAAB...`) in einer Zeile ohne Kommentare lediglich VOR den Key kommt `ssh-rsa ` inklusive Leerzeichen und am Ende des Keys in der gleichen Zeile `== xv12345` mit der entsprechenden xv-Nummer und inklusive Leerzeichen. 
+1. Wichtig bei der Beantragung ist der public key der in einem speziellen Format vorliegen muss. Nur der reine Key (ab dem Buchstaben-Salat z.B. `AAAB...`) in einer Zeile ohne Kommentare lediglich VOR den Key kommt `ssh-rsa ` inklusive Leerzeichen und am Ende des Keys in der gleichen Zeile `== xv12345` mit der entsprechenden xv-Nummer und vor den Gleichheitszeichen OHNE und hinter den Gleichheitszeichen MIT Leerzeichen. 
 1. Auf Flexit Maschine einloggen über Putty: Name der Flexit Maschine und Port 22
 1. Auf Flexit Maschine `git clone https://github.ruv.de/xv60789/ansibleRShiny.git`
-1. In neuen Ordner gehen  `cd ansibleRShiny`.
+1. In neuen Ordner gehen `cd ansibleRShiny`.
 1. `shiny_packages.R` anpassen, indem Liste von Paketen gelöscht und durch gewünschte Pakete (auf CRAN) ersetzt wird.
 1. Ausführen von `ansible-playbook shiny_tasks.yml`
 1. Vor den nächsten Befehlen in putty "forwarding" erlauben: Unter `data` xv-Nummer als Auto-Login-User eintragen und unter SSH > Auth > "Allow agent forwarding" anhaken.
 1. Ausführen `scp -r library/* xv12345@lx00XXX:/apps/shiny/site-library/` wobei xv12345 die XV-Nummer ist und lx00XXX ist der Name der Linux-Maschine. (Achtung hier auf momentanen Ordner, ggf. library nicht notwendig
-1. Alternativ wenn libraries ersetzt werden soll: `scp -rp library/* xv12345@lx00XXX:/apps/shiny/site-library/` 
+1. Alternativ wenn libraries ersetzt werden soll: `scp -rp library/* xv12345@lx00XXX:/apps/shiny/site-library/`
